@@ -5,19 +5,13 @@ using CellGrid;
 
 public class GridTest : MonoBehaviour
 {
+    private int rows = 16, cols = 32;
+
     void Start()
     {
-        var grid = new GridContainer();
 
-        for (int r = 0; r < 8; r++)
-        {
-            for (int c = 0; c < 8; c++)
-            {
-                var cell = new Cell(r, c);
-                cell.Text = (r + c).ToString();
-                grid[r, c] = cell;
-            }
-        }
+        var grid = new GridContainer(rows, cols);
+
     }
 
 }
