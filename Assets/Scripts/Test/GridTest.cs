@@ -9,7 +9,6 @@ public class GridTest : MonoBehaviour
 
     void Start()
     {
-
         var grid = new GridContainer(rows, cols);
 
     }

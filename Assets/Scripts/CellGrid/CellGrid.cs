@@ -25,6 +25,7 @@ namespace CellGrid
                 {
                     var cell = CreateOrGetCell(r, c);
                     cell.Text = r.ToString() + "," + c.ToString();
+
                     Debug.DrawLine(new Vector3(c * Cell.cellSize, 0), new Vector3(c * Cell.cellSize, rows * Cell.cellSize), Color.white, 100f);
                 }
 

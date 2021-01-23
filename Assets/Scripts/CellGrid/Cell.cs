@@ -57,7 +57,25 @@ namespace CellGrid
             this.textMesh = textMesh;
             textMesh.alignment = TextAlignmentOptions.Center;
 
+            var backPanel = new GameObject("back", typeof(MeshRenderer), typeof(MeshFilter));
+
+            var filter = backPanel.GetComponent<MeshFilter>();
+            var meshRenderer = backPanel.GetComponent<MeshRenderer>();
+
+            filter.mesh = MeshGenerator.GetQuad(cellSize);
+
+            var shader = Shader.Find("Unlit/Color");
+            var mat = new Material(shader);
+            mat.SetColor("_Color", Color.black);
+
+            meshRenderer.material = mat;
+
+            var panelTrans = backPanel.transform;
+
+            panelTrans.position = worldPos - new Vector3(cellSize / 2, cellSize / 2);
+
         }
+
 
     }
 
