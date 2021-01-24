@@ -61,5 +61,29 @@ namespace CellGrid
             return cell;
         }
 
+        protected void GetPosByWorldPos(Vector3 worldPos, out int x, out int y)
+        {
+            x = -1;
+            y = -1;
+
+            if (worldPos.x >= 0 && worldPos.y >= 0)
+            {
+                x = Mathf.FloorToInt(worldPos.y / Cell.cellSize);
+                y = Mathf.FloorToInt(worldPos.x / Cell.cellSize);
+            }
+        }
+
+        public Cell GetCell(Vector3 worldPos)
+        {
+            GetPosByWorldPos(worldPos, out int row, out int col);
+
+            if (row != -1 && col != -1)
+            {
+                return GetCell(row, col);
+            }
+
+            return null;
+        }
+
     }
 }

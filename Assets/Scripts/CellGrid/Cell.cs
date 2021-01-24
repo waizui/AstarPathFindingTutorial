@@ -25,9 +25,11 @@ namespace CellGrid
         {
             set
             {
+                this.panelMat.SetColor("_Color", value);
             }
 
         }
+        private Material panelMat;
 
         private TextMeshPro textMesh;
 
@@ -69,6 +71,7 @@ namespace CellGrid
             mat.SetColor("_Color", Color.black);
 
             meshRenderer.material = mat;
+            this.panelMat = mat;
 
             var panelTrans = backPanel.transform;
 
