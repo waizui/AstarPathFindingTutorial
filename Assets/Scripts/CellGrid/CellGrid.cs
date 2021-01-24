@@ -8,6 +8,10 @@ namespace CellGrid
 {
     public class GridContainer
     {
+
+        public int Rows;
+        public int Cols;
+
         CellArray cells;
 
         public GridContainer()
@@ -17,6 +21,9 @@ namespace CellGrid
 
         public GridContainer(int rows, int cols) : this()
         {
+            this.Rows = rows;
+            this.Cols = cols;
+
             for (int r = 0; r < rows; r++)
             {
                 Debug.DrawLine(new Vector3(0, r * Cell.cellSize), new Vector3(cols * Cell.cellSize, r * Cell.cellSize), Color.white, 100f);
