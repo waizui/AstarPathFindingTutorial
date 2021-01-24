@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -20,7 +21,13 @@ namespace CellGrid
         public string Text
         {
             get { return textMesh.text; }
-            set { textMesh.text = value; }
+            set
+            {
+                if (textMesh.text != value)
+                {
+                    textMesh.text = value;
+                }
+            }
         }
 
         public Color BackColor
@@ -31,6 +38,9 @@ namespace CellGrid
             }
 
         }
+
+        internal GridContainer grid;
+
         private Material panelMat;
 
         private TextMeshPro textMesh;
@@ -81,7 +91,10 @@ namespace CellGrid
 
         }
 
-
+        public override string ToString()
+        {
+            return Row.ToString() + "," + Col.ToString();
+        }
     }
 
 }

@@ -28,11 +28,8 @@ public class PathFindingTest : MonoBehaviour
 
             var cell = grid.GetCell(worldpos);
 
-            if (cell != null)
-            {
-                cell.Text = "<color=black>right</color>\r\n main \r\n bottom";
-                cell.BackColor = Color.red;
-            }
+            if (cell == null)
+                return;
 
 
             var path = Astar.FindPath(grid, 0, 0, cell.Row, cell.Col);
@@ -43,10 +40,15 @@ public class PathFindingTest : MonoBehaviour
                 foreach (var node in path)
                 {
                     var pCell = grid.CreateOrGetCell(node.Row, node.Col);
+                    pCell.Text = string.Format("<color=red>G:{0}</color>\r\n <color=red>F:{1}</color>\r\n <color=red>H:{2}</color>",
+                        node.GCost, node.FCost, node.HCost);
                     pCell.BackColor = Color.green;
                 }
 
             }
+
+            cell.Text = "<color=black>right</color>\r\n main \r\n bottom";
+            cell.BackColor = Color.red;
 
         }
 

@@ -18,6 +18,21 @@ namespace PathFinding
 
         public List<PathNode> FindPath(GridContainer grid, int startRow, int startCol, int endRow, int endCol)
         {
+
+            foreach (var cache in grid.PathNodesCaches)
+            {
+                var cell = grid.GetCell(cache.Row, cache.Col);
+
+                if (cell != null)
+                {
+                    cell.BackColor = Color.black;
+                    cell.Text = cell.ToString();
+                    cell.PathNode = null;
+                }
+            }
+
+            grid.PathNodesCaches.Clear();
+
             var startNode = new PathNode(grid, startRow, startCol);
 
             startNode.GCost = 0;
@@ -163,6 +178,8 @@ namespace PathFinding
 
                 node = node.PrevNode;
             }
+            pathNodes.Add(node);
+
             return pathNodes;
         }
 

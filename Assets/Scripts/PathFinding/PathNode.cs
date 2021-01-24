@@ -31,6 +31,7 @@ namespace PathFinding
             this.Row = cell.Row;
             this.Col = cell.Col;
             cell.PathNode = this;
+            cell.grid.PathNodesCaches.Add(this);
         }
 
         public PathNode(GridContainer grid, int row, int col) : this()
@@ -39,7 +40,9 @@ namespace PathFinding
             this.Col = col;
 
             var cell = grid.CreateOrGetCell(row, col);
+
             cell.PathNode = this;
+            grid.PathNodesCaches.Add(this);
         }
 
 

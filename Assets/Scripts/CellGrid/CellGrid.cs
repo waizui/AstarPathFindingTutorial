@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CellGrid.Core;
+using System;
 using CellArray = CellGrid.Core.FourDArray<CellGrid.Cell>;
 
 namespace CellGrid
@@ -13,6 +14,8 @@ namespace CellGrid
         public int Cols;
 
         CellArray cells;
+
+        public HashSet<PathFinding.PathNode> PathNodesCaches = new HashSet<PathFinding.PathNode>();
 
         public GridContainer()
         {
@@ -26,20 +29,20 @@ namespace CellGrid
 
             for (int r = 0; r < rows; r++)
             {
-                Debug.DrawLine(new Vector3(0, r * Cell.cellSize), new Vector3(cols * Cell.cellSize, r * Cell.cellSize), Color.white, 100f);
+                Debug.DrawLine(new Vector3(0, r * Cell.cellSize), new Vector3(cols * Cell.cellSize, r * Cell.cellSize), Color.white, 1000f);
 
                 for (int c = 0; c < cols; c++)
                 {
                     var cell = CreateOrGetCell(r, c);
                     cell.Text = r.ToString() + "," + c.ToString();
 
-                    Debug.DrawLine(new Vector3(c * Cell.cellSize, 0), new Vector3(c * Cell.cellSize, rows * Cell.cellSize), Color.white, 100f);
+                    Debug.DrawLine(new Vector3(c * Cell.cellSize, 0), new Vector3(c * Cell.cellSize, rows * Cell.cellSize), Color.white, 1000f);
                 }
 
-                Debug.DrawLine(new Vector3(cols * Cell.cellSize, 0), new Vector3(cols * Cell.cellSize, rows * Cell.cellSize), Color.white, 100f);
+                Debug.DrawLine(new Vector3(cols * Cell.cellSize, 0), new Vector3(cols * Cell.cellSize, rows * Cell.cellSize), Color.white, 1000f);
 
             }
-            Debug.DrawLine(new Vector3(0, rows * Cell.cellSize), new Vector3(cols * Cell.cellSize, rows * Cell.cellSize), Color.white, 100f);
+            Debug.DrawLine(new Vector3(0, rows * Cell.cellSize), new Vector3(cols * Cell.cellSize, rows * Cell.cellSize), Color.white, 1000f);
         }
 
         public Cell this[int row, int col]
@@ -62,6 +65,7 @@ namespace CellGrid
             if (cell == null)
             {
                 cell = new Cell(row, col);
+                cell.grid = this;
                 cells[row, col] = cell;
             }
 
@@ -90,6 +94,12 @@ namespace CellGrid
             }
 
             return null;
+        }
+
+
+        public void IterateCell(Func<int, int, Cell, int> iterator)
+        {
+            cells.IterateWithNull(iterator);
         }
 
     }
