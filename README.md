@@ -6,6 +6,7 @@
 
 
 ## 阶段一 实现基本完成，图中是在一个表格系统中测试结果。
+## stage 1 testing result on a grid system. 
 ![image](https://raw.githubusercontent.com/waizui/AstarPathFindingTutorial/master/GitResources/stage1.jpg)
 
 
