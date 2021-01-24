@@ -8,6 +8,8 @@ namespace CellGrid
 
     public sealed class Cell
     {
+        public PathFinding.PathNode PathNode;
+
         public const float cellSize = 16f;
 
         public int Col { get; private set; }

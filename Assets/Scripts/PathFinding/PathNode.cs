@@ -6,7 +6,6 @@ namespace PathFinding
 
     public class PathNode
     {
-        protected Cell Cell;
 
         public int Row { get; private set; }
 
@@ -29,16 +28,24 @@ namespace PathFinding
 
         public PathNode(Cell cell) : this()
         {
-            this.Cell = cell;
             this.Row = cell.Row;
             this.Col = cell.Col;
+            cell.PathNode = this;
         }
 
-        public PathNode(int row, int col) : this()
+        public PathNode(GridContainer grid, int row, int col) : this()
         {
             this.Row = row;
             this.Col = col;
 
+            var cell = grid.CreateOrGetCell(row, col);
+            cell.PathNode = this;
+        }
+
+
+        public override string ToString()
+        {
+            return Row.ToString() + Col.ToString();
         }
 
     }

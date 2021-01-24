@@ -18,7 +18,7 @@ namespace PathFinding
 
         public List<PathNode> FindPath(GridContainer grid, int startRow, int startCol, int endRow, int endCol)
         {
-            var startNode = new PathNode(startRow, startCol);
+            var startNode = new PathNode(grid, startRow, startCol);
 
             startNode.GCost = 0;
             startNode.HCost = CalcDistanceCost(startRow, startCol, endRow, endCol);
@@ -43,7 +43,7 @@ namespace PathFinding
                 closeList.Add(currentNode);
 
 
-                var neighbours = GetNeighbourNodes(currentNode, grid.Rows - 1, grid.Cols - 1);
+                var neighbours = GetNeighbourNodes(grid, currentNode, grid.Rows - 1, grid.Cols - 1);
 
                 foreach (var node in neighbours)
                 {
@@ -79,7 +79,7 @@ namespace PathFinding
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        private List<PathNode> GetNeighbourNodes(PathNode node, int maxRow, int maxCol)
+        private List<PathNode> GetNeighbourNodes(GridContainer grid, PathNode node, int maxRow, int maxCol)
         {
             List<PathNode> nodes = new List<PathNode>();
 
@@ -89,51 +89,68 @@ namespace PathFinding
             if (node.Col + 1 <= maxCol)
             {
                 //正右方
-                nodes.Add(new PathNode(node.Row, node.Col + 1));
+                nodes.Add(GetOrCreateNode(grid, node.Row, node.Col + 1));
                 //右下方
                 if (!exceedBottom)
                 {
-                    nodes.Add(new PathNode(node.Row - 1, node.Col + 1));
+                    nodes.Add(GetOrCreateNode(grid, node.Row - 1, node.Col + 1));
                 }
                 //右上方
                 if (!exceedTop)
                 {
-                    nodes.Add(new PathNode(node.Row + 1, node.Col + 1));
+                    nodes.Add(GetOrCreateNode(grid, node.Row + 1, node.Col + 1));
                 }
             }
 
             if (node.Col - 1 >= 0)
             {
                 //正左方
-                nodes.Add(new PathNode(node.Row, node.Col - 1));
+                nodes.Add(GetOrCreateNode(grid, node.Row, node.Col - 1));
                 //左下
                 if (!exceedBottom)
                 {
-                    nodes.Add(new PathNode(node.Row - 1, node.Col - 1));
+                    nodes.Add(GetOrCreateNode(grid, node.Row - 1, node.Col - 1));
                 }
                 //左上
                 if (!exceedTop)
                 {
 
-                    nodes.Add(new PathNode(node.Row + 1, node.Col - 1));
+                    nodes.Add(GetOrCreateNode(grid, node.Row + 1, node.Col - 1));
                 }
             }
 
             //正上方
             if (!exceedTop)
             {
-                nodes.Add(new PathNode(node.Row + 1, node.Col));
+                nodes.Add(GetOrCreateNode(grid, node.Row + 1, node.Col));
             }
 
             //正下方
             if (!exceedBottom)
             {
-                nodes.Add(new PathNode(node.Row - 1, node.Col));
+                nodes.Add(GetOrCreateNode(grid, node.Row - 1, node.Col));
             }
 
             return nodes;
         }
 
+
+        private PathNode GetOrCreateNode(GridContainer grid, int row, int col)
+        {
+            PathNode node = null;
+            var cell = grid.CreateOrGetCell(row, col);
+
+            if (cell.PathNode == null)
+            {
+                node = new PathNode(cell);
+            }
+            else
+            {
+                node = cell.PathNode;
+            }
+
+            return node;
+        }
 
         private List<PathNode> TraceBackPath(PathNode node)
         {
