@@ -15,24 +15,28 @@ public class PathFindingTest : MonoBehaviour
     void Start()
     {
         grid = new GridContainer(rows, cols);
-        Astar = new AStarPathFinding();
+        Astar = new AStarPathFinding(grid);
     }
 
 
     private void Update()
     {
-
+        //左键选中目标点（起点默认0，0）
+        //left click to mark target point,defaut start point is (0,0)
         if (Input.GetMouseButton(0))
         {
-            var worldpos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            var cell = grid.GetCell(worldpos);
+            var cell = MousePosToCell(Input.mousePosition);
 
             if (cell == null)
                 return;
 
+            var targetNode = Astar.GetOrCreateNode(cell.Row, cell.Col, true);
 
-            var path = Astar.FindPath(grid, 0, 0, cell.Row, cell.Col);
+            if (!targetNode.Walkable)
+                return;
+
+            var path = Astar.FindPath(0, 0, cell.Row, cell.Col);
 
 
             if (path != null)
@@ -51,7 +55,29 @@ public class PathFindingTest : MonoBehaviour
             cell.BackColor = Color.red;
 
         }
+        //右键标记无法行走
+        //right click to mark unwalkable cell
+        else if (Input.GetMouseButton(1))
+        {
+            var cell = MousePosToCell(Input.mousePosition);
 
+            if (cell == null)
+                return;
+
+            cell.BackColor = Color.white;
+            cell.Text = "";
+
+            Astar.GetOrCreateNode(cell.Row, cell.Col, false);
+        }
+
+    }
+
+
+    private Cell MousePosToCell(Vector3 mousePOs)
+    {
+        var worldpos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        return grid.GetCell(worldpos);
     }
 
 }
