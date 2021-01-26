@@ -2,14 +2,14 @@
 # this repository is an implementation of 2D a\* path-finding algorithm.
 #一个A\*算法实现。
 
-<br/>演示stage2 仅打开PathFingTest这个gameobject，演示stage3 仅打开"PaithFidingCoroutine"；
-<br/>only active "PathFingTest" gameobjec for demonstrate stage2,and only active "PaithFidingCoroutine" for stage3(sorry for miss spelling) 
+<br/>演示stage2 仅打开PathFindingTest这个gameobject，演示stage3 仅打开"PathFidingCoroutine"；
+<br/>only active "PathFindingTest" gameobjec for demonstrate stage2,and only active "PathFidingCoroutine" for stage3(sorry for miss spelling) 
 ![image](https://raw.githubusercontent.com/waizui/AstarPathFindingTutorial/master/GitResources/detail.png)
 
 <br/>
 
 ## 阶段一 实现基本完成，图中是在一个表格系统中测试结果。
-## stage 1 testing result on a grid system. 
+## stage 1 test result on a grid system. 
 
 ![image](https://raw.githubusercontent.com/waizui/AstarPathFindingTutorial/master/GitResources/stage1.jpg)
 
@@ -25,7 +25,7 @@
 <br/>
 
 ## 阶段三 逐步展示算法运算过程
-## stage3 break algoritm into small steps
+## stage3 break algorithm into small steps
 
 <br/>在选择目标点后，可以看到寻路过程，蓝色代表被加入到openList的区域，红色代表放入closeList的区域。
 <br/>after select target , a procedure of path find will be animated, nodes be added to openlist will marked blue,nodes added to closeList will marked red.
