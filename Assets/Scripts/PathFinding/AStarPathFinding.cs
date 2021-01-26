@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CellGrid;
 using System.Linq;
-
+using System;
 
 namespace PathFinding
 {
@@ -106,6 +106,119 @@ namespace PathFinding
             }
 
             return null;
+        }
+
+
+        public IEnumerator FindPathCoroutine(int startRow, int startCol, int endRow, int endCol, Func<bool> evaluator, Action onFinsh)
+        {
+            foreach (var cache in grid.PathNodesCaches)
+            {
+                var cell = grid.GetCell(cache.Row, cache.Col);
+
+                if (cell != null)
+                {
+                    cell.BackColor = Color.black;
+                    cell.Text = cell.ToString();
+                    cell.PathNode = null;
+                }
+            }
+
+            grid.PathNodesCaches.Clear();
+
+            var startNode = new PathNode(grid, startRow, startCol);
+
+            startNode.GCost = 0;
+            startNode.HCost = CalcDistanceCost(startRow, startCol, endRow, endCol);
+
+            var startCell = grid.CreateOrGetCell(startNode.Row, startNode.Col);
+            startCell.BackColor = Color.blue;
+
+            //带搜索的node集合
+            //nodes wait for being searching
+            HashSet<PathNode> openList = new HashSet<PathNode> { startNode };
+            //被排除的node集合
+            //nodes being excluded
+            HashSet<PathNode> closeList = new HashSet<PathNode>();
+
+            while (openList.Count > 0)
+            {
+                //找到Fcost最小的节点继续搜索
+                //find lowerest Fcost node the use it for searching  
+                PathNode currentNode = GetLowerCostNode(openList);
+
+
+                yield return new WaitWhile(evaluator);
+
+                //找到了目标
+                //if found tagert return a path
+                if (currentNode.Col == endCol && currentNode.Row == endRow)
+                {
+                    var path = TraceBackPath(currentNode);
+
+                    foreach (var node in path)
+                    {
+                        var pCell = grid.CreateOrGetCell(node.Row, node.Col);
+                        pCell.BackColor = Color.green;
+                    }
+
+                    onFinsh.Invoke();
+                    yield break;
+                }
+
+                openList.Remove(currentNode);
+                closeList.Add(currentNode);
+
+                var cCell = grid.CreateOrGetCell(currentNode.Row, currentNode.Col);
+                cCell.BackColor = Color.red;
+
+                yield return new WaitForSeconds(.05f);
+
+
+                var neighbours = GetNeighbourNodes(grid, currentNode, grid.Rows - 1, grid.Cols - 1);
+
+                foreach (var node in neighbours)
+                {
+                    if (closeList.Contains(node))
+                        continue;
+
+                    if (!node.Walkable)
+                    {
+                        closeList.Add(node);
+                        continue;
+                    }
+
+                    yield return new WaitWhile(evaluator);
+
+                    //var nCell = grid.CreateOrGetCell(node.Row, node.Col);
+                    //nCell.BackColor = Color.blue;
+
+                    yield return new WaitForSeconds(.05f);
+
+                    //从当前节点到这个节点的gcost
+                    //calculate gcost from currentnode to  target neigbour node
+                    int enterGost = currentNode.GCost + CalcDistanceCost(currentNode, node);
+
+                    //如果一个节点是几个节点的的临近节点，则更新cost比较小的那个节点为这个节点的prevNode 这样cost最小的节点被链接起来
+                    //在多次迭代后会产生一个cost最小的路径
+                    //if a node is neighbour for multiple nodes , let this node's lowerset gcost neighbour to become prevNode of this node
+                    //thus will generate a path consist of nodes that with lowerest gcost chainning together
+                    if (enterGost < node.GCost)
+                    {
+                        node.PrevNode = currentNode;
+                        node.GCost = enterGost;
+                        node.HCost = CalcDistanceCost(node.Row, node.Col, endRow, endCol);
+                        //如果没有被搜索过 就加入openlist搜索
+                        if (!openList.Contains(node))
+                        {
+                            openList.Add(node);
+                            var nodeCell = grid.CreateOrGetCell(node.Row, node.Col);
+                            nodeCell.BackColor = Color.blue;
+                        }
+                    }
+                }
+
+            }
+
         }
 
 

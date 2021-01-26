@@ -102,5 +102,11 @@ namespace CellGrid
             cells.IterateWithNull(iterator);
         }
 
+        public Cell SceenPosToCell(Vector3 mousePos)
+        {
+            var worldpos = Camera.main.ScreenToWorldPoint(mousePos);
+
+            return this.GetCell(worldpos);
+        }
     }
 }

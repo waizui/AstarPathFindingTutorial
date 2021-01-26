@@ -12,6 +12,8 @@ public class PathFindingTest : MonoBehaviour
 
     private AStarPathFinding Astar;
 
+
+
     void Start()
     {
         grid = new GridContainer(rows, cols);
@@ -25,8 +27,7 @@ public class PathFindingTest : MonoBehaviour
         //left click to mark target point,defaut start point is (0,0)
         if (Input.GetMouseButton(0))
         {
-
-            var cell = MousePosToCell(Input.mousePosition);
+            var cell = grid.SceenPosToCell(Input.mousePosition);
 
             if (cell == null)
                 return;
@@ -59,7 +60,7 @@ public class PathFindingTest : MonoBehaviour
         //right click to mark unwalkable cell
         else if (Input.GetMouseButton(1))
         {
-            var cell = MousePosToCell(Input.mousePosition);
+            var cell = grid.SceenPosToCell(Input.mousePosition);
 
             if (cell == null)
                 return;
@@ -72,12 +73,11 @@ public class PathFindingTest : MonoBehaviour
 
     }
 
-
-    private Cell MousePosToCell(Vector3 mousePOs)
+    void OnGUI()
     {
-        var worldpos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        return grid.GetCell(worldpos);
+        GUI.Label(new Rect(10, 10, Cell.cellSize * 64, Cell.cellSize * 4),
+            "左键选取目标点，右键标记不可行走区域,空格暂停 \r\n"
+            + "left click select target ,right click mark unwalkable area . space for pause");
     }
 
 }
